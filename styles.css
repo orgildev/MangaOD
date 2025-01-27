@@ -1,0 +1,237 @@
+/* Base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1a1a1a;
+    color: #ffffff;
+}
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0rem;
+}
+
+/* Navigation bar */
+.navbar {
+    background: #1F407E;
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 100;
+}
+
+/* Only make navbar sticky in reader mode */
+.reader .reader-controls {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(0,0,0,0.9);
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+}
+
+.reader-controls .chapter-select {
+    max-width: 50%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.reader-controls .back-button {
+    flex-shrink: 0;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo {
+    height: 80px;
+    width: auto;
+}
+
+.site-title {
+    font-size: 2rem;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Manga Grid */
+.manga-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+@media (max-width: 768px) {
+    .manga-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .back-button {
+        font-size: 0.9rem;
+        padding: 0.35rem 0.75rem;
+    }
+
+    .chapter-select {
+        padding: 0.35rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Manga Cards */
+.manga-card {
+    background: #2a2a2a;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.manga-card:hover {
+    transform: translateY(-5px);
+}
+
+.manga-cover {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    background: #3a3a3a;
+}
+
+.manga-info {
+    padding: 1rem;
+}
+
+.manga-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+}
+
+.manga-chapters {
+    color: #999;
+    font-size: 0.9rem;
+}
+
+/* Reader Layout */
+.reader {
+    display: none;
+    min-height: 100vh;
+    background: #000;
+}
+
+.reader.active {
+    display: block;
+}
+
+
+.reader-controls.visible {
+    transform: translateY(0);
+}
+
+/* Reader Pages */
+.reader-pages {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 0 0 0; /* Add top padding for navbar */
+    display: flex;
+    flex-direction: column;
+    font-size: 0; /* Removes inline spacing */
+}
+
+#pages {
+    line-height: 0; /* Removes line height gaps */
+}
+
+.page-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+    font-size: 0;
+    border: none;
+}
+
+/* Bottom Navigation */
+.bottom-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    gap: 1rem;
+    background: #1a1a1a;
+    margin-top: 2rem;
+}
+
+/* Buttons and Inputs */
+.chapter-nav-button {
+    background: #444;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    min-width: 120px;
+}
+
+.chapter-nav-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.chapter-nav-button:not(:disabled):hover {
+    background: #555;
+}
+
+.nav-button {
+    background: #444;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.nav-button:hover {
+    background: #555;
+}
+
+.chapter-select {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.back-button {
+    display: inline-block;
+    margin-right: 1rem;
+    color: #fff;
+    text-decoration: none;
+    background: #444;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
+
+.back-button:hover {
+    background: #555;
+}

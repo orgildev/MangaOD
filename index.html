@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MangaOD</title>
+    <link rel="icon" type="image/png" href="logo-tp.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Home view with manga grid -->
+    <div id="home" class="home">
+        <div class="navbar">
+            <div class="container">
+                <div class="navbar-brand">
+                    <img src="logo-tp.png" alt="MangaOD" class="logo">
+                    <h1 class="site-title">MangaOD</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="manga-grid" id="mangaGrid"></div>
+        </div>
+    </div>
+
+    <!-- Reader view with manga pages -->
+    <div id="reader" class="reader">
+        <div class="reader-controls">
+            <a href="#" class="back-button" id="backButton">← Back to Home</a>
+            <select class="chapter-select" id="chapterSelect"></select>
+        </div>
+        <div class="reader-pages" id="readerPages">
+            <div id="pages"></div>
+            <div class="bottom-controls">
+                <button class="chapter-nav-button" id="prevChapter">Previous Chapter</button>
+                <button class="chapter-nav-button" id="nextChapter">Next Chapter</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
