@@ -31,13 +31,8 @@ app.get('/scan-manga', async (req, res) => {
             let displayTitle = mangaTitle;
             if (coverPath) {
                 displayTitle = coverPath
-                    .toLowerCase()
-                    .replace(/cover[_\s-]*/i, '') // Remove 'cover' and following separators
                     .replace(/\.(jpg|png|webp)$/i, '') // Remove file extension
                     .replace(/[_\s-]+/g, ' ') // Replace separators with spaces
-                    .split(' ')
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize words
-                    .join(' ')
                     .trim();
             }
 
