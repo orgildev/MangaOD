@@ -31,11 +31,11 @@ app.get('/scan-manga', async (req, res) => {
             
             if (!stats.isDirectory()) return null;
             
-            const chapters = await fs.readdir(mangaDir);
-            console.log(`Files in ${mangaTitle}:`, chapters);
+            const dirContents = await fs.readdir(mangaDir);
+            console.log(`Files in ${mangaTitle}:`, dirContents);
 
             // Look for any image files that might be covers
-            const imageFiles = chapters.filter(file => {
+            const imageFiles = dirContents.filter(file => {
                 const lowerFile = file.toLowerCase();
                 return lowerFile.endsWith('.jpg') || 
                        lowerFile.endsWith('.jpeg') || 
@@ -70,9 +70,18 @@ app.get('/scan-manga', async (req, res) => {
                 title: displayTitle,     // Display title from cover image
                 folderName: mangaTitle,  // Original folder name for file operations
                 cover: coverPath ? `/mangas/${mangaTitle}/${coverPath}` : null,
-                chapters: chapters.filter(chapter => 
-                    !chapter.toLowerCase().includes('cover')
-                ).sort((a, b) => {
+                chapters: (await Promise.all(dirContents.map(async item => {
+                    const itemPath = path.join(mangaDir, item);
+                    try {
+                        const stats = await fs.stat(itemPath);
+                        if (stats.isDirectory() && item.toLowerCase().startsWith('chapter')) {
+                            return item;
+                        }
+                    } catch (error) {
+                        console.log(`Skipping non-directory item: ${item}`);
+                    }
+                    return null;
+                }))).filter(Boolean).sort((a, b) => {
                     const numA = parseInt(a.match(/\d+/)?.[0] || '0');
                     const numB = parseInt(b.match(/\d+/)?.[0] || '0');
                     return numA - numB;
