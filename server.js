@@ -94,7 +94,7 @@ app.get('/scan-manga', async (req, res) => {
             return {
                 title: displayTitle,     // Display title from cover image
                 folderName: mangaTitle,  // Original folder name for file operations
-                cover: coverPath ? `/mangas/${encodeURIComponent(mangaTitle)}/${encodeURIComponent(coverPath)}` : null,
+                cover: coverPath ? `/mangas/${mangaTitle}/${coverPath}` : null,
                 chapters: chapters
             };
         }));
@@ -126,7 +126,7 @@ app.get('/manga/:title/chapter/:chapter', async (req, res) => {
                 const numB = parseInt(b.match(/\d+/)?.[0] || '0');
                 return numA - numB;
             })
-            .map(file => `/mangas/${encodeURIComponent(title)}/${encodeURIComponent(chapter)}/${encodeURIComponent(file)}`);
+            .map(file => `/mangas/${title}/${chapter}/${file}`);
 
         res.json(pages);
     } catch (error) {

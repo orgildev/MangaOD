@@ -24,9 +24,8 @@ function displayMangaGrid(mangas) {
     mangas.forEach(manga => {
         const card = document.createElement('div');
         card.className = 'manga-card';
-        const coverUrl = manga.cover ? encodeURI(manga.cover) : '#';
         card.innerHTML = `
-            <img class="manga-cover" src="${coverUrl}" alt="${manga.title}">
+            <img class="manga-cover" src="${manga.cover || '#'}" alt="${manga.title}">
             <div class="manga-info">
                 <h3 class="manga-title">${manga.title}</h3>
                 <div class="manga-chapters">${manga.chapters.length} Chapters</div>
@@ -92,7 +91,7 @@ function displayPages() {
     
     pages.forEach((page, index) => {
         const img = document.createElement('img');
-        img.src = encodeURI(page);
+        img.src = page;
         img.alt = `Page ${index + 1}`;
         img.className = 'page-img';
         container.appendChild(img);
