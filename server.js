@@ -67,7 +67,8 @@ app.get('/scan-manga', async (req, res) => {
             }
 
             return {
-                title: displayTitle,
+                title: displayTitle,     // Display title from cover image
+                folderName: mangaTitle,  // Original folder name for file operations
                 cover: coverPath ? `/mangas/${mangaTitle}/${coverPath}` : null,
                 chapters: chapters.filter(chapter => 
                     !chapter.toLowerCase().includes('cover')

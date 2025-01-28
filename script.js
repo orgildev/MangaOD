@@ -70,11 +70,12 @@ async function loadChapter(chapterIndex) {
         const chapterPath = currentManga.chapters[chapterIndex];
         console.log('Loading chapter:', {
             title: currentManga.title,
+            folderName: currentManga.folderName,
             chapter: chapterPath,
-            url: `/manga/${currentManga.title}/chapter/${chapterPath}`
+            url: `/manga/${currentManga.folderName}/chapter/${chapterPath}`
         });
         
-        const response = await fetch(`/manga/${currentManga.title}/chapter/${chapterPath}`);
+        const response = await fetch(`/manga/${currentManga.folderName}/chapter/${chapterPath}`);
         pages = await response.json();
         console.log('Loaded pages:', pages);
         displayPages();
