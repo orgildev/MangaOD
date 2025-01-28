@@ -109,7 +109,8 @@ app.get('/scan-manga', async (req, res) => {
 // Get chapter pages
 app.get('/manga/:title/chapter/:chapter', async (req, res) => {
     try {
-        const title = req.params.title; // Keep the encoded format
+        // Keep title encoded, decode chapter for filesystem access
+        const title = req.params.title;
         const chapter = decodeURIComponent(req.params.chapter);
         const chapterPath = path.join(__dirname, '..', 'optiplexmom', 'MangaDownloader', 'Mangas', title, chapter);
         console.log('Reading chapter from:', chapterPath);
@@ -126,7 +127,8 @@ app.get('/manga/:title/chapter/:chapter', async (req, res) => {
                 const numB = parseInt(b.match(/\d+/)?.[0] || '0');
                 return numA - numB;
             })
-            .map(file => `/mangas/${title}/${chapter}/${file}`);
+            // Keep the URLs consistent with the filesystem paths
+            .map(file => `/mangas/${title}/Chapter%20${chapter.match(/\d+/)[0]}/${file}`);
 
         res.json(pages);
     } catch (error) {
