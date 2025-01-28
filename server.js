@@ -27,8 +27,22 @@ app.get('/scan-manga', async (req, res) => {
                 (file.endsWith('.jpg') || file.endsWith('.png') || file.endsWith('.webp'))
             );
 
+            // Extract title from cover photo name if available
+            let displayTitle = mangaTitle;
+            if (coverPath) {
+                displayTitle = coverPath
+                    .toLowerCase()
+                    .replace(/cover[_\s-]*/i, '') // Remove 'cover' and following separators
+                    .replace(/\.(jpg|png|webp)$/i, '') // Remove file extension
+                    .replace(/[_\s-]+/g, ' ') // Replace separators with spaces
+                    .split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize words
+                    .join(' ')
+                    .trim();
+            }
+
             return {
-                title: mangaTitle,
+                title: displayTitle,
                 cover: coverPath ? `/mangas/${mangaTitle}/${coverPath}` : null,
                 chapters: chapters.filter(chapter => 
                     !chapter.toLowerCase().includes('cover')
