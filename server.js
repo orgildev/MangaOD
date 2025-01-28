@@ -13,7 +13,17 @@ app.use('/mangas', express.static(path.join(__dirname, '..', 'optiplexmom', 'Man
 app.get('/scan-manga', async (req, res) => {
     try {
         const mangaPath = path.join(__dirname, '..', 'optiplexmom', 'MangaDownloader', 'Mangas');
+        console.log('Scanning manga directory:', mangaPath);
+        
+        try {
+            await fs.access(mangaPath);
+        } catch {
+            console.error('Manga directory not found:', mangaPath);
+            return res.json([]);
+        }
+        
         const mangas = await fs.readdir(mangaPath);
+        console.log('Found manga directories:', mangas);
         
         const mangaList = await Promise.all(mangas.map(async (mangaTitle) => {
             const mangaDir = path.join(mangaPath, mangaTitle);
@@ -22,16 +32,36 @@ app.get('/scan-manga', async (req, res) => {
             if (!stats.isDirectory()) return null;
             
             const chapters = await fs.readdir(mangaDir);
-            const coverPath = chapters.find(file => 
-                file.toLowerCase().includes('cover') && 
-                (file.endsWith('.jpg') || file.endsWith('.png') || file.endsWith('.webp'))
+            console.log(`Files in ${mangaTitle}:`, chapters);
+
+            // Look for any image files that might be covers
+            const imageFiles = chapters.filter(file => {
+                const lowerFile = file.toLowerCase();
+                return lowerFile.endsWith('.jpg') || 
+                       lowerFile.endsWith('.jpeg') || 
+                       lowerFile.endsWith('.png') || 
+                       lowerFile.endsWith('.webp');
+            });
+            console.log(`Image files in ${mangaTitle}:`, imageFiles);
+
+            // First try to find an image with "cover" in the name
+            let coverPath = imageFiles.find(file => 
+                file.toLowerCase().includes('cover')
             );
+
+            // If no cover found, try the first image file
+            if (!coverPath && imageFiles.length > 0) {
+                coverPath = imageFiles[0];
+                console.log(`No cover found, using first image: ${coverPath}`);
+            }
+
+            console.log(`Cover for ${mangaTitle}:`, coverPath);
 
             // Extract title from cover photo name if available
             let displayTitle = mangaTitle;
             if (coverPath) {
                 displayTitle = coverPath
-                    .replace(/\.(jpg|png|webp)$/i, '') // Remove file extension
+                    .replace(/\.(jpg|jpeg|png|webp)$/i, '') // Remove file extension
                     .replace(/[_\s-]+/g, ' ') // Replace separators with spaces
                     .trim();
             }
