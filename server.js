@@ -7,7 +7,18 @@ const PORT = 3001;
 
 // Serve static files
 app.use(express.static(__dirname));
-app.use('/mangas', express.static(path.join(__dirname, '..', 'optiplexmom', 'MangaDownloader', 'Mangas')));
+app.use('/mangas', express.static(path.join(__dirname, '..', 'optiplexmom', 'MangaDownloader', 'Mangas'), {
+    // Handle encoded URIs properly
+    dotfiles: 'ignore',
+    etag: false,
+    extensions: ['jpg', 'jpeg', 'png', 'webp'],
+    index: false,
+    maxAge: '1d',
+    redirect: false,
+    setHeaders: function (res, path, stat) {
+        res.set('x-timestamp', Date.now());
+    }
+}));
 
 // Scan manga directory
 app.get('/scan-manga', async (req, res) => {
@@ -112,6 +123,7 @@ app.get('/manga/:title/chapter/:chapter', async (req, res) => {
         // Keep title encoded, decode chapter for filesystem access
         const title = req.params.title;
         const chapter = decodeURIComponent(req.params.chapter);
+        console.log('Requested title:', title);
         const chapterPath = path.join(__dirname, '..', 'optiplexmom', 'MangaDownloader', 'Mangas', title, chapter);
         console.log('Reading chapter from:', chapterPath);
         
@@ -128,7 +140,15 @@ app.get('/manga/:title/chapter/:chapter', async (req, res) => {
                 return numA - numB;
             })
             // Keep the URLs consistent with the filesystem paths
-            .map(file => `/mangas/${title}/Chapter%20${chapter.match(/\d+/)[0]}/${file}`);
+            .map(file => {
+                // Get just the chapter number for URL construction
+                const chapterNum = chapter.match(/\d+/)[0];
+                
+                // Use original folder structure format
+                const url = `/mangas/${title}/Chapter ${chapterNum}/${file}`;
+                console.log('Generated image URL:', url);
+                return url;
+            });
 
         res.json(pages);
     } catch (error) {

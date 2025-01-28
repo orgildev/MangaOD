@@ -91,9 +91,20 @@ function displayPages() {
     
     pages.forEach((page, index) => {
         const img = document.createElement('img');
-        img.src = page;
         img.alt = `Page ${index + 1}`;
         img.className = 'page-img';
+        img.onerror = () => {
+            console.error('Failed to load image:', page);
+            console.log('Image attributes:', {
+                src: img.src,
+                alt: img.alt,
+                className: img.className,
+                naturalWidth: img.naturalWidth,
+                naturalHeight: img.naturalHeight
+            });
+        };
+        console.log('Setting image src:', page);
+        img.src = page;
         container.appendChild(img);
     });
 
