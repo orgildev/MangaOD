@@ -109,7 +109,7 @@ app.get('/scan-manga', async (req, res) => {
 // Get chapter pages
 app.get('/manga/:title/chapter/:chapter', async (req, res) => {
     try {
-        const title = decodeURIComponent(req.params.title);
+        const title = req.params.title; // Keep the encoded format
         const chapter = decodeURIComponent(req.params.chapter);
         const chapterPath = path.join(__dirname, '..', 'optiplexmom', 'MangaDownloader', 'Mangas', title, chapter);
         console.log('Reading chapter from:', chapterPath);
