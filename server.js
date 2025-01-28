@@ -66,26 +66,36 @@ app.get('/scan-manga', async (req, res) => {
                     .trim();
             }
 
+            // Scan for chapters with more flexible matching
+            const chapters = [];
+            for (const item of dirContents) {
+                const itemPath = path.join(mangaDir, item);
+                try {
+                    const stats = await fs.stat(itemPath);
+                    if (stats.isDirectory()) {
+                        // Match both "chapter X" and variants, case insensitive
+                        const chapterMatch = item.toLowerCase().match(/chapter\s*(\d+)/);
+                        if (chapterMatch) {
+                            chapters.push(item);
+                        }
+                    }
+                } catch (error) {
+                    console.log(`Skipping non-directory item: ${item}`);
+                }
+            }
+
+            // Sort chapters by number
+            chapters.sort((a, b) => {
+                const numA = parseInt(a.match(/\d+/)?.[0] || '0');
+                const numB = parseInt(b.match(/\d+/)?.[0] || '0');
+                return numA - numB;
+            });
+
             return {
                 title: displayTitle,     // Display title from cover image
                 folderName: mangaTitle,  // Original folder name for file operations
-                cover: coverPath ? `/mangas/${mangaTitle}/${coverPath}` : null,
-                chapters: (await Promise.all(dirContents.map(async item => {
-                    const itemPath = path.join(mangaDir, item);
-                    try {
-                        const stats = await fs.stat(itemPath);
-                        if (stats.isDirectory() && item.toLowerCase().startsWith('chapter')) {
-                            return item;
-                        }
-                    } catch (error) {
-                        console.log(`Skipping non-directory item: ${item}`);
-                    }
-                    return null;
-                }))).filter(Boolean).sort((a, b) => {
-                    const numA = parseInt(a.match(/\d+/)?.[0] || '0');
-                    const numB = parseInt(b.match(/\d+/)?.[0] || '0');
-                    return numA - numB;
-                })
+                cover: coverPath ? `/mangas/${encodeURIComponent(mangaTitle)}/${encodeURIComponent(coverPath)}` : null,
+                chapters: chapters
             };
         }));
 
@@ -116,7 +126,7 @@ app.get('/manga/:title/chapter/:chapter', async (req, res) => {
                 const numB = parseInt(b.match(/\d+/)?.[0] || '0');
                 return numA - numB;
             })
-            .map(file => `/mangas/${title}/${chapter}/${file}`);
+            .map(file => `/mangas/${encodeURIComponent(title)}/${encodeURIComponent(chapter)}/${encodeURIComponent(file)}`);
 
         res.json(pages);
     } catch (error) {
