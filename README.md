@@ -1,10 +1,10 @@
 # Local Manga Reader
 
-A web-based manga reader that loads manga from your local filesystem, similar to Asura Scans and MangaDex.
+A clean web-based manga reader
 
 ## Setup
 
-1. Install Node.js if you haven't already
+1. Install Node.js
 2. Install dependencies:
 ```bash
 npm install
